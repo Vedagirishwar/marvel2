@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVENT MANAGMENT SYSTEM | Register</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<style>
+
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:Arial;
+height:100vh;
+background:url("https://images.unsplash.com/photo-1635805737707-575885ab0820?auto=format&fit=crop&w=1470&q=80") no-repeat center center fixed;
+background-size:cover;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+body::before{
+content:"";
+position:absolute;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.75);
+}
+
+.register-box{
+position:relative;
+background:#111;
+width:360px;
+padding:30px;
+border-radius:12px;
+border:2px solid #e62429;
+box-shadow:0 0 25px #e62429;
+color:white;
+}
+
+h2{
+text-align:center;
+font-family:'Bebas Neue';
+letter-spacing:2px;
+font-size:32px;
+color:#e62429;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:12px;
+border-radius:6px;
+border:1px solid #444;
+background:#222;
+color:white;
+}
+
+input:focus{
+outline:none;
+border:1px solid #e62429;
+}
+
+button{
+width:100%;
+margin-top:20px;
+padding:12px;
+background:#e62429;
+color:white;
+font-weight:bold;
+border:none;
+border-radius:6px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#ff2a30;
+box-shadow:0 0 15px #e62429;
+}
+
+.login-link{
+text-align:center;
+margin-top:15px;
+}
+
+.login-link a{
+color:#e62429;
+text-decoration:none;
+font-weight:bold;
+}
+
+#msg{
+text-align:center;
+margin-top:12px;
+min-height:40px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="register-box">
+
+<h2>EVENT MANAGMENT SYSTEM<br>REGISTER</h2>
+
+<input type="text" id="name" placeholder="Name">
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+
+<button type="button" id="registerBtn">Join</button>
+
+<p id="msg"></p>
+
+<div class="login-link">
+Already a hero? <a href="login.html">Login</a>
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("registerBtn").onclick=function(){
+
+const msg=document.getElementById("msg");
+msg.style.color="#ff4444";
+msg.innerHTML="";
+
+const name=document.getElementById("name").value.trim();
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value.trim();
+
+/* NAME VALIDATION */
+
+const nameRegex=/^[A-Za-z ]+$/;
+
+if(name===""){
+msg.innerHTML="⚠ Enter your name!";
+return;
+}
+
+if(!nameRegex.test(name)){
+msg.innerHTML="⚠ Name must contain only alphabets";
+return;
+}
+
+/* EMAIL VALIDATION */
+
+const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if(email===""){
+msg.innerHTML="⚠ Enter your email!";
+return;
+}
+
+if(!emailRegex.test(email)){
+msg.innerHTML="⚠ Invalid email format";
+return;
+}
+
+/* PASSWORD VALIDATION */
+
+const strong=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+=-]).{8,}$/;
+
+if(password===""){
+msg.innerHTML="⚠ Enter password!";
+return;
+}
+
+if(!strong.test(password)){
+msg.innerHTML="⚠ Weak Password! Use uppercase, number & symbol";
+return;
+}
+
+/* SEND DATA TO PHP */
+
+fetch("register.php",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/x-www-form-urlencoded"
+},
+
+body:`username=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+
+})
+
+.then(res=>res.text())
+
+.then(data=>{
+
+msg.style.color="#00ff9c";
+msg.innerHTML=data;
+
+setTimeout(function(){
+window.location.href="login.html";
+},1500);
+
+})
+
+.catch(()=>{
+
+msg.innerHTML="⚠ Server error";
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
